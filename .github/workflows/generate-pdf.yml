@@ -12,69 +12,61 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc \
-            texlive-latex-base \
-            texlive-fonts-recommended \
-            texlive-latex-extra \
-            texlive-latex-recommended
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Updated to Node 18 which has ReadableStream
 
-      - name: Create PDF style template
+      - name: Install md-to-pdf
+        run: npm install -g md-to-pdf
+
+      - name: Create style file
         run: |
-          cat > template.tex << 'EOL'
-          \documentclass[11pt]{article}
-          \usepackage[utf8]{inputenc}
-          \usepackage{geometry}
-          \usepackage{hyperref}
-          \usepackage{listings}
-          \usepackage{xcolor}
-          \usepackage{fancyhdr}
-          
-          \geometry{a4paper, margin=1in}
-          
-          \definecolor{codegray}{rgb}{0.95,0.95,0.95}
-          \definecolor{codegreen}{rgb}{0,0.6,0}
-          \definecolor{backcolour}{rgb}{0.95,0.95,0.95}
-          
-          \lstdefinestyle{mystyle}{
-              backgroundcolor=\color{backcolour},   
-              basicstyle=\ttfamily\small,
-              breakatwhitespace=false,         
-              breaklines=true,                 
-              captionpos=b,                    
-              keepspaces=true,                 
-              numbers=left,                    
-              numbersep=5pt,                  
-              showspaces=false,                
-              showstringspaces=false,
-              showtabs=false,                  
-              tabsize=2
+          cat > style.css << 'EOL'
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
           }
-          
-          \lstset{style=mystyle}
-          
-          \pagestyle{fancy}
-          \fancyhf{}
-          \rhead{Go2 WiFi Setup}
-          \lhead{\today}
-          \cfoot{\thepage}
-          
-          \begin{document}
-          $body$
-          \end{document}
+
+          pre {
+            background-color: #f6f8fa;
+            border-radius: 3px;
+            padding: 16px;
+            overflow-x: auto;
+          }
+
+          code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+          }
+
+          h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+          }
+
+          table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+          }
+
+          th, td {
+            border: 1px solid #dfe2e5;
+            padding: 6px 13px;
+          }
+
+          img {
+            max-width: 100%;
+          }
           EOL
 
       - name: Convert README to PDF
         run: |
-          pandoc README.md \
-            --from markdown \
-            --template template.tex \
-            --pdf-engine=pdflatex \
-            --highlight-style=tango \
-            --toc \
-            -o README.pdf
+          md-to-pdf README.md --stylesheet style.css
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v3
