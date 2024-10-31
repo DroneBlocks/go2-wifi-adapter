@@ -124,10 +124,10 @@ install_packages() {
         # For Debian/Ubuntu
         bold "Installing Debian packages..."
         # First pass: try to install everything, ignore errors but show output
-        dpkg -i --verbose *.deb || true
+        dpkg -i *.deb || true
         # Second pass: retry now that dependencies might be satisfied
         bold "Retrying package installation to resolve dependencies..."
-        dpkg -i --verbose *.deb || die "Package installation failed"
+        dpkg -i *.deb || die "Package installation failed"
         
         # Show package status
         bold "Installed package status:"
@@ -150,7 +150,7 @@ install_driver() {
     cd debs || die "Cannot find debs directory"
     if command -v dpkg >/dev/null; then
         bold "Installing driver package..."
-        dpkg -i --verbose rtl88x2bu-dkms.deb || die "Driver package installation failed"
+        dpkg -i rtl88x2bu-dkms.deb || die "Driver package installation failed"
         
         # Show DKMS status
         bold "DKMS status:"
