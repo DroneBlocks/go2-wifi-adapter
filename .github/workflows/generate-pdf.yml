@@ -1,0 +1,69 @@
+name: Generate PDF Documentation
+on:
+  push:
+    paths:
+      - 'README.md'
+    branches:
+      - main
+
+jobs:
+  convert_to_pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install md-to-pdf
+        run: npm install -g md-to-pdf
+
+      - name: Convert README to PDF
+        run: |
+          # Add custom CSS for better PDF formatting
+          echo "
+          body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          pre {
+            background-color: #f6f8fa;
+            border-radius: 3px;
+            padding: 16px;
+            overflow-x: auto;
+          }
+          code {
+            font-family: 'Courier New', Courier, monospace;
+          }
+          h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+          }
+          " > style.css
+          
+          md-to-pdf README.md --stylesheet style.css
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: documentation
+          path: README.pdf
+
+      - name: Update Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Delete previous release if it exists
+          gh release delete latest --cleanup-tag || true
+          
+          # Create new release
+          gh release create latest README.pdf \
+            --title "Latest Documentation" \
+            --notes "Automatically generated documentation from README.md" \
+            --prerelease

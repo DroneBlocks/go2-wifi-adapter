@@ -1,0 +1,12 @@
+{
+    "stylesheet": "style.css",
+    "body_class": "markdown-body",
+    "css": "body { padding: 20px; max-width: none; }",
+    "pdf_options": {
+      "format": "A4",
+      "margin": "20mm",
+      "printBackground": true,
+      "headerTemplate": "<style>\n  section { margin: 0 auto; font-family: system-ui; font-size: 8px; }\n</style>",
+      "footerTemplate": "<style>\n  section { margin: 0 auto; font-family: system-ui; font-size: 8px; }\n</style>\n<section>\n  <div>\n    Page <span class='pageNumber'></span> of <span class='totalPages'></span>\n  </div>\n</section>"
+    }
+  }
