@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive-latex-base texlive-fonts-recommended texlive-extra-utils texlive-latex-extra
+          sudo apt-get install -y pandoc texlive-latex-base texlive-fonts-recommended
 
       - name: Create PDF style template
         run: |
@@ -67,7 +67,7 @@ jobs:
           pandoc README.md \
             --from markdown \
             --template template.tex \
-            --pdf-engine=xelatex \
+            --pdf-engine=pdflatex \
             --highlight-style=tango \
             --toc \
             -o README.pdf
