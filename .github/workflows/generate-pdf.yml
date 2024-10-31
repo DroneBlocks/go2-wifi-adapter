@@ -9,8 +9,6 @@ on:
 # Add permissions block
 permissions:
   contents: write
-  packages: write
-  releases: write
 
 jobs:
   convert_to_pdf:
