@@ -1,0 +1,1 @@
+# go2-wifi-adapter
