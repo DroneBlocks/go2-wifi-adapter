@@ -73,16 +73,3 @@ jobs:
         with:
           name: documentation
           path: README.pdf
-
-      - name: Update Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Delete previous release if it exists
-          gh release delete latest --cleanup-tag || true
-          
-          # Create new release
-          gh release create latest README.pdf \
-            --title "Latest Documentation" \
-            --notes "Automatically generated documentation from README.md" \
-            --prerelease
