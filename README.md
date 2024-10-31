@@ -40,7 +40,7 @@ This method allows you to install the driver without requiring an internet conne
    cd /home/unitree/ac1l_offline_files
    sudo ./install-offline.sh
    ```
-
+ 
 4. Wait until you see "The driver was successfully installed!"
 
 ### Option B: Online Installation
