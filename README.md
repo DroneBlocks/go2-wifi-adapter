@@ -86,7 +86,7 @@ After completing either installation method:
 Now, the Go2 should show up as a WiFi network that you can connect to from any device! You can connect using the following credentials:
    - SSID: `DroneBlocks-Go2-001`
    - Password: `00000000`
-
+ 
 
 
 ## SSH via WiFi
