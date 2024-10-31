@@ -1,4 +1,4 @@
-# BrosTrend WiFi Adapter Installation Guide for Go2
+# DroneBlocks WiFi Adapter Installation Guide for Go2
 
 This guide explains how to install and configure the BrosTrend AC1L WiFi adapter on your Go2 robot.
 
