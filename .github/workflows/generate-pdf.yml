@@ -6,6 +6,12 @@ on:
     branches:
       - main
 
+# Add permissions block
+permissions:
+  contents: write
+  packages: write
+  releases: write
+
 jobs:
   convert_to_pdf:
     runs-on: ubuntu-latest
@@ -15,13 +21,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # Updated to Node 18 which has ReadableStream
+          node-version: '18'
 
       - name: Install md-to-pdf
         run: npm install -g md-to-pdf
 
       - name: Create style file
         run: |
+          echo "Creating style.css in $(pwd)"
           cat > style.css << 'EOL'
           body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -63,13 +70,36 @@ jobs:
             max-width: 100%;
           }
           EOL
+          echo "Created style.css"
 
       - name: Convert README to PDF
         run: |
+          echo "Current directory: $(pwd)"
+          echo "Files before conversion:"
+          ls -la
           md-to-pdf README.md --stylesheet style.css
+          echo "Files after conversion:"
+          ls -la
+          echo "PDF file details:"
+          ls -l README.pdf
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v3
         with:
           name: documentation
           path: README.pdf
+
+      - name: Update Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Creating/updating release with PDF..."
+          # Delete previous release if it exists
+          gh release delete latest --cleanup-tag || true || echo "No existing release to delete"
+          
+          # Create new release
+          gh release create latest README.pdf \
+            --title "Latest Documentation" \
+            --notes "Automatically generated documentation from README.md" \
+            --prerelease
+          echo "Release updated"
